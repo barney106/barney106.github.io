@@ -2,19 +2,183 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mis Aplicaciones Android</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Aplicaciones Android | Molino Apps</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #202124;
+            --accent-color: #01875f; /* Color verde Google Play */
+            --bg-color: #f8f9fa;
+            --text-color: #3c4043;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        header h1 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 2.5rem;
+        }
+
+        header p {
+            color: #70757a;
+            margin-top: 0.5rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e0e0e0;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            background-color: #eee;
+            border-radius: 12px;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+
+        .app-title {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+
+        .app-description {
+            font-size: 0.95rem;
+            color: #5f6368;
+            flex-grow: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-play {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-play:hover {
+            background-color: #016d4d;
+        }
+
+        .btn-policy {
+            background-color: white;
+            color: var(--accent-color);
+            border: 1px solid #dadce0;
+        }
+
+        .btn-policy:hover {
+            background-color: #f1f3f4;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #70757a;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
 <body>
-    <h1>Mis Aplicaciones</h1>
-    <div class="app-grid">
-        <div class="app-card">
-            <img src="assets/images/app1-icon.png" alt="Icono App 1">
-            <h2>Nombre de App 1</h2>
-            <p>Una breve descripción de lo que hace tu app.</p>
-            <a href="app1/index.html">Ver detalles</a>
-            <a href="https://play.google.com/store/apps/details?id=com.tu.paquete">Google Play</a>
+
+    <header>
+        <h1>Mis Aplicaciones</h1>
+        <p>Desarrollos Android para el día a día</p>
+    </header>
+
+    <div class="container">
+        <div class="app-grid">
+
+            <div class="app-card">
+                <div class="app-header">
+                    <img src="https://via.placeholder.com/64" alt="BrainFit" class="app-icon">
+                    <h2 class="app-title">BrainFit</h2>
+                </div>
+                <p class="app-description">Mejora tu agilidad mental y entrena tu cerebro con desafíos diarios diseñados para potenciar tu memoria y concentración.</p>
+                <div class="btn-group">
+                    <a href="https://play.google.com/store/apps/details?id=com.molino.app.brainfit" class="btn btn-play" target="_blank">Google Play</a>
+                    <a href="brainfit/privacy-policy.html" class="btn btn-policy">Privacidad</a>
+                </div>
+            </div>
+
+            <div class="app-card">
+                <div class="app-header">
+                    <img src="https://via.placeholder.com/64" alt="Maker Cost Calc" class="app-icon">
+                    <h2 class="app-title">Maker Cost Calc</h2>
+                </div>
+                <p class="app-description">La herramienta definitiva para creadores. Calcula con precisión el costo de tus proyectos, materiales y mano de obra.</p>
+                <div class="btn-group">
+                    <a href="https://play.google.com/store/apps/details?id=com.molino.app.maker_cost_calc" class="btn btn-play" target="_blank">Google Play</a>
+                    <a href="maker-cost-calc/privacy-policy.html" class="btn btn-policy">Privacidad</a>
+                </div>
+            </div>
+
         </div>
-        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Molino Apps. Todos los derechos reservados.</p>
+    </footer>
+
 </body>
 </html>

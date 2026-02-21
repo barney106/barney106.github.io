@@ -82,10 +82,10 @@
 
         h1 {
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-size: clamp(2rem, 7vw, 4rem);
             font-weight: 700;
             letter-spacing: -0.02em;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
             -webkit-background-clip: text;
             background-clip: text;
@@ -93,7 +93,7 @@
         }
 
         header p {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             color: var(--text-muted);
             max-width: 600px;
             margin: 0 auto;
@@ -102,13 +102,13 @@
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 2rem 1.5rem 6rem;
+            padding: 1rem 1.25rem 4rem;
         }
 
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
         }
 
         .app-card {
@@ -291,12 +291,35 @@
         }
 
         @media (max-width: 600px) {
+            header {
+                padding: 3rem 1.1rem 1rem;
+            }
+
             .app-grid {
                 grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+
+            .app-card {
+                padding: 1.5rem;
+            }
+
+            .app-icon-wrapper {
+                width: 64px;
+                height: 64px;
+            }
+
+            .app-icon-wrapper svg {
+                width: 38px;
+                height: 38px;
             }
 
             h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
+            }
+
+            .btn {
+                padding: 0.7rem 1rem;
             }
         }
     </style>
@@ -309,7 +332,8 @@
     <header class="animate">
         <div class="logo-container">
             <!-- Molino Apps SVG Logo -->
-            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+                style="width: 64px; height: 64px;">
                 <circle cx="50" cy="50" r="45" stroke="url(#paint0_linear)" stroke-width="2" />
                 <path d="M50 20V50L75 65" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" />
                 <path d="M50 20L25 65M50 50L25 65" stroke="var(--secondary)" stroke-width="4" stroke-linecap="round" />
@@ -323,7 +347,7 @@
             </svg>
         </div>
         <h1>Molino Apps</h1>
-        <p>Herramientas inteligentes diseñadas para simplificar tu día a día.</p>
+        <p>Herramientas inteligentes para tu día a día.</p>
     </header>
 
     <div class="container">

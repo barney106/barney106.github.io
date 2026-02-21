@@ -1,175 +1,385 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Aplicaciones Android | Molino Apps</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    
+    <title>Molino Apps | Soluciones Inteligentes para tu Smartphone</title>
+    <meta name="description"
+        content="Descubre el catálogo de aplicaciones de Molino Apps. Herramientas diseñadas para mejorar tu productividad y agilidad mental.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
-            --primary-color: #202124;
-            --accent-color: #01875f; /* Color verde Google Play */
-            --bg-color: #f8f9fa;
-            --text-color: #3c4043;
+            --primary: #6366f1;
+            /* Indigo */
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #10b981;
+            /* Emerald */
+            --secondary-glow: rgba(16, 185, 129, 0.4);
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient Background */
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 20% 20%, var(--primary-glow) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, var(--secondary-glow) 0%, transparent 40%);
+            opacity: 0.5;
+            filter: blur(100px);
         }
 
         header {
-            background-color: white;
-            padding: 2rem 1rem;
+            padding: 4rem 1rem;
             text-align: center;
-            border-bottom: 1px solid #dadce0;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        header h1 {
-            margin: 0;
-            color: var(--primary-color);
-            font-size: 2.5rem;
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-svg {
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 0 15px var(--primary-glow));
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         header p {
-            color: #70757a;
-            margin-top: 0.5rem;
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 6rem;
         }
 
         .app-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2.5rem;
         }
 
         .app-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-            transition: transform 0.2s;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             display: flex;
             flex-direction: column;
-            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .app-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
         .app-header {
             display: flex;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .app-icon {
-            width: 64px;
-            height: 64px;
-            background-color: #eee;
-            border-radius: 12px;
-            margin-right: 1rem;
-            object-fit: cover;
+        .app-icon-wrapper {
+            width: 72px;
+            height: 72px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            margin-right: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .app-icon-wrapper svg {
+            width: 44px;
+            height: 44px;
         }
 
         .app-title {
-            margin: 0;
-            font-size: 1.25rem;
-            color: var(--primary-color);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
         }
 
         .app-description {
-            font-size: 0.95rem;
-            color: #5f6368;
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
             flex-grow: 1;
-            margin-bottom: 1.5rem;
         }
 
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .btn {
             text-decoration: none;
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.9rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
             text-align: center;
             flex: 1;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-play {
-            background-color: var(--accent-color);
+            background: var(--primary);
             color: white;
+            box-shadow: 0 4px 15px var(--primary-glow);
         }
 
         .btn-play:hover {
-            background-color: #016d4d;
+            background: #4f46e5;
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px var(--primary-glow);
         }
 
         .btn-policy {
-            background-color: white;
-            color: var(--accent-color);
-            border: 1px solid #dadce0;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
         }
 
         .btn-policy:hover {
-            background-color: #f1f3f4;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .badge-new {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         footer {
             text-align: center;
-            padding: 3rem 1rem;
-            color: #70757a;
-            font-size: 0.85rem;
+            padding: 4rem 1rem;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        @media (max-width: 600px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
+
 <body>
 
-    <header>
-        <h1>Mis Aplicaciones</h1>
-        <p>Desarrollos Android para el día a día</p>
+    <div class="ambient-glow"></div>
+
+    <header class="animate">
+        <div class="logo-container">
+            <!-- Molino Apps SVG Logo -->
+            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" stroke="url(#paint0_linear)" stroke-width="2" />
+                <path d="M50 20V50L75 65" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" />
+                <path d="M50 20L25 65M50 50L25 65" stroke="var(--secondary)" stroke-width="4" stroke-linecap="round" />
+                <circle cx="50" cy="50" r="5" fill="#fff" />
+                <defs>
+                    <linearGradient id="paint0_linear" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="var(--primary)" />
+                        <stop offset="1" stop-color="var(--secondary)" />
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
+        <h1>Molino Apps</h1>
+        <p>Herramientas inteligentes diseñadas para simplificar tu día a día.</p>
     </header>
 
     <div class="container">
         <div class="app-grid">
 
-            <div class="app-card">
+            <!-- BrainFit Card -->
+            <div class="app-card animate delay-1">
                 <div class="app-header">
-                    <img src="https://via.placeholder.com/64" alt="BrainFit" class="app-icon">
+                    <div class="app-icon-wrapper">
+                        <!-- Brain Icon SVG -->
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M9.5 2C7.567 2 6 3.567 6 5.5C6 6.13 6.17 6.72 6.46 7.23C5.58 8 5 9.18 5 10.5C5 11.2 5.17 11.85 5.46 12.42C4.58 13.06 4 14.21 4 15.5C4 17.43 5.567 19 7.5 19H8V21C8 21.55 8.45 22 9 22H15C15.55 22 16 21.55 16 21V19H16.5C18.43 19 20 17.43 20 15.5C20 14.21 19.42 13.06 18.54 12.42C18.83 11.85 19 11.2 19 10.5C19 9.18 18.42 8 17.54 7.23C17.83 6.72 18 6.13 18 5.5C18 3.567 16.433 2 14.5 2H9.5ZM9.5 4H14.5C15.328 4 16 4.672 16 5.5C16 6.328 15.328 7 14.5 7H9.5C8.672 7 8 6.328 8 5.5C8 4.672 8.672 4 9.5 4Z"
+                                fill="var(--secondary)" />
+                        </svg>
+                    </div>
                     <h2 class="app-title">BrainFit</h2>
                 </div>
-                <p class="app-description">Mejora tu agilidad mental y entrena tu cerebro con desafíos diarios diseñados para potenciar tu memoria y concentración.</p>
+                <p class="app-description">Potencia tu agilidad mental con ejercicios diarios. Entrena tu memoria,
+                    concentración y velocidad de procesamiento de forma divertida.</p>
                 <div class="btn-group">
-                    <a href="https://play.google.com/store/apps/details?id=com.molino.app.brainfit" class="btn btn-play" target="_blank">Google Play</a>
-                    <a href="brainfit/privacy-policy.html" class="btn btn-policy">Privacidad</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.molino.app.brainfit" class="btn btn-play"
+                        target="_blank">
+                        <span>Google Play</span>
+                    </a>
+                    <a href="barinfit/privacy-policy.html" class="btn btn-policy">Privacidad</a>
                 </div>
             </div>
 
-            <div class="app-card">
+            <!-- PrintMargin Card -->
+            <div class="app-card animate delay-2">
+                <span class="badge-new">Nuevo</span>
                 <div class="app-header">
-                    <img src="https://via.placeholder.com/64" alt="Maker Cost Calc" class="app-icon">
-                    <h2 class="app-title">Maker Cost Calc</h2>
+                    <div class="app-icon-wrapper">
+                        <!-- Calculation/3D Print Icon SVG -->
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L4.5 6.4V15.6L12 20L19.5 15.6V6.4L12 2Z" stroke="var(--primary)"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M12 22V12" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M20 7L12 12L4 7" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M12 12H17" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h2 class="app-title">PrintMargin</h2>
                 </div>
-                <p class="app-description">La herramienta definitiva para creadores. Calcula con precisión el costo de tus proyectos, materiales y mano de obra.</p>
+                <p class="app-description">La herramienta definitiva para makers. Calcula con precisión el coste de tus
+                    proyectos, márgenes de beneficio y optimización de materiales.</p>
                 <div class="btn-group">
-                    <a href="https://play.google.com/store/apps/details?id=com.molino.app.maker_cost_calc" class="btn btn-play" target="_blank">Google Play</a>
-                    <a href="maker-cost-calc/privacy-policy.html" class="btn btn-policy">Privacidad</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.molino.app.maker_cost_calc"
+                        class="btn btn-play" target="_blank">
+                        <span>Google Play</span>
+                    </a>
+                    <a href="print_margin/privacy-policy.html" class="btn btn-policy">Privacidad</a>
                 </div>
             </div>
 
@@ -177,8 +387,13 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 Molino Apps. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Molino Apps. Todos los derechos reservados.</p>
+        <div class="footer-links">
+            <a href="app-ads.txt">app-ads.txt</a>
+            <a href="mailto:soporte@molinoapps.com">Soporte</a>
+        </div>
     </footer>
 
 </body>
+
 </html>

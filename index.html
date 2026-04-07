@@ -225,6 +225,11 @@
             gap: 8px;
         }
 
+        .btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
         .btn-play {
             background: var(--primary);
             color: white;
@@ -289,6 +294,12 @@
 
         .footer-links a:hover {
             color: var(--primary);
+        }
+
+        .footer-links a:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+            border-radius: 4px;
         }
 
         /* Animations */
@@ -534,7 +545,7 @@
                 </div>
                 <p class="app-description">Próximamente. Estamos preparando una nueva experiencia que revolucionará tu forma de jugar.</p>
                 <div class="btn-group">
-                    <a href="#" class="btn btn-play" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;">
+                    <a href="#" class="btn btn-play" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" aria-disabled="true" tabindex="-1">
                         <span>Próximamente</span>
                     </a>
                     <a href="gameturn/privacy-policy.html" class="btn btn-policy">Privacidad</a>

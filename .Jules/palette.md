@@ -1,5 +1,9 @@
-## 2025-04-07 - Disabled Anchor Tags
+## 2023-10-24 - Resolving Ambiguous Link Context
+**Learning:** Found a recurring pattern in the app cards where identical link text ("Google Play", "Privacidad") was used across multiple sections. This creates a confusing experience for screen reader users navigating a list of links without surrounding context.
+**Action:** Always add descriptive `aria-label` attributes (e.g., `aria-label="Descargar BrainFit en Google Play"`) to generic links inside repeated components like cards.
 
-**Learning:** Styling an `<a>` tag to look disabled (e.g., using `pointer-events: none` and visual opacity) is not enough for keyboard and screen reader accessibility. Because it remains natively focusable, users tabbing through the page will land on a visually "dead" link, causing confusion and trapping focus.
+## 2023-10-24 - Resolving Ambiguous Link Context
 
-**Action:** Whenever a link acts as a button and needs to be disabled, always add `aria-disabled="true"` to signal its state to assistive technologies and `tabindex="-1"` to explicitly remove it from the keyboard focus order.
+**Learning:** Found a recurring pattern in the app cards where identical link text ("Google Play", "Privacidad") was used across multiple sections. This creates a confusing experience for screen reader users navigating a list of links without surrounding context.
+
+**Action:** Always add descriptive `aria-label` attributes (e.g., `aria-label="Descargar BrainFit en Google Play"`) to generic links inside repeated components like cards.

@@ -343,6 +343,17 @@
             animation-delay: 1.2s;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
         @media (max-width: 600px) {
             header {
                 padding: 3rem 1.1rem 1rem;
@@ -404,7 +415,7 @@
         <p>Herramientas inteligentes para tu día a día.</p>
     </header>
 
-    <div class="container">
+    <main class="container">
         <div class="app-grid">
 
             <!-- BrainFit Card -->
@@ -553,7 +564,7 @@
             </div>
 
         </div>
-    </div>
+    </main>
 
     <footer>
         <p>&copy; 2026 Molino Apps. Todos los derechos reservados.</p>

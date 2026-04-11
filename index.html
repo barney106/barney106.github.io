@@ -343,6 +343,23 @@
             animation-delay: 1.2s;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .app-card:hover, .app-card:focus-within {
+                transform: none;
+            }
+            .btn-play:hover {
+                transform: none;
+            }
+        }
+
         @media (max-width: 600px) {
             header {
                 padding: 3rem 1.1rem 1rem;

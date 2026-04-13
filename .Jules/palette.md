@@ -19,3 +19,9 @@
 **Learning:** This static app heavily relies on continuous or triggered CSS animations and hover transitions to bring attention to interactive components like app cards. For users with vestibular motion disorders, these animations can cause discomfort or nausea. We need to respect the OS-level "reduced motion" preference natively.
 
 **Action:** Whenever custom CSS animations or `transform`-based hover transitions are added in `<style>` blocks, ensure an `@media (prefers-reduced-motion: reduce)` block is included. Set `animation-duration: 0.01ms !important;` and remove transformative hover states (`transform: none`) to keep the static app accessible to all users.
+
+## 2024-05-24 - Disabled Button UX & `pointer-events`
+
+**Learning:** Using `pointer-events: none` on disabled visual elements (like the "Próximamente" button) ruins the user experience because it prevents the OS-level `cursor: not-allowed` from displaying and stops native `title` tooltips from rendering on hover. Users receive no interactive feedback as to why the button is unresponsive.
+
+**Action:** When creating visually disabled buttons, avoid `pointer-events: none`. Instead, rely on `cursor: not-allowed`, add a helpful `title` tooltip explaining the disabled state, and use semantic attributes like `aria-disabled="true"` to ensure screen readers provide correct context.

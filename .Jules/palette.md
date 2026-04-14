@@ -31,3 +31,7 @@
 **Learning:** Removing `pointer-events: none` from disabled elements only solves the issue for mouse users; keyboard users cannot reach disabled `<a>` elements without an `href` (e.g. if using `tabindex="-1"`). This causes them to completely miss the context and tooltip.
 
 **Action:** Ensure disabled interactive elements like `<a>` tags have `tabindex="0"` and `role="button"` (if they act like buttons) along with `aria-disabled="true"`. This makes them keyboard focusable and correctly announced by screen readers without being interactive.
+
+## 2026-04-14 - Adding Skip-to-Content Links
+**Learning:** Screen reader and keyboard users navigate visually complex or long pages linearly. Without a way to bypass repetitive top-level navigation, ambient animations, or headers, reaching the main content is tedious. Adding a `skip-link` that is visually hidden but appears on `focus` creates an immediate accessibility win without compromising the visual design.
+**Action:** Ensure that apps with rich headers or repeating navigation include a `.skip-link` right after the `<body>` tag pointing directly to the `<main>` content id.

@@ -25,3 +25,9 @@
 **Learning:** Using `pointer-events: none` on disabled visual elements (like the "Próximamente" button) ruins the user experience because it prevents the OS-level `cursor: not-allowed` from displaying and stops native `title` tooltips from rendering on hover. Users receive no interactive feedback as to why the button is unresponsive.
 
 **Action:** When creating visually disabled buttons, avoid `pointer-events: none`. Instead, rely on `cursor: not-allowed`, add a helpful `title` tooltip explaining the disabled state, and use semantic attributes like `aria-disabled="true"` to ensure screen readers provide correct context.
+
+## 2026-04-13 - Focusable Disabled States
+
+**Learning:** Removing `pointer-events: none` from disabled elements only solves the issue for mouse users; keyboard users cannot reach disabled `<a>` elements without an `href` (e.g. if using `tabindex="-1"`). This causes them to completely miss the context and tooltip.
+
+**Action:** Ensure disabled interactive elements like `<a>` tags have `tabindex="0"` and `role="button"` (if they act like buttons) along with `aria-disabled="true"`. This makes them keyboard focusable and correctly announced by screen readers without being interactive.

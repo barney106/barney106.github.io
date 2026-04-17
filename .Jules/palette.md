@@ -35,3 +35,7 @@
 ## 2026-04-14 - Adding Skip-to-Content Links
 **Learning:** Screen reader and keyboard users navigate visually complex or long pages linearly. Without a way to bypass repetitive top-level navigation, ambient animations, or headers, reaching the main content is tedious. Adding a `skip-link` that is visually hidden but appears on `focus` creates an immediate accessibility win without compromising the visual design.
 **Action:** Ensure that apps with rich headers or repeating navigation include a `.skip-link` right after the `<body>` tag pointing directly to the `<main>` content id.
+
+## 2026-04-15 - Refining Skip-to-Content UX (Smooth Scroll & Focus Outline)
+**Learning:** While skip-to-content links require `tabindex="-1"` on the target container (like `<main>`) to programmatically receive focus, this causes browsers to render a massive, visually jarring focus ring around the entire content area. Also, an instantaneous jump can be disorienting.
+**Action:** Always add `#main-content:focus { outline: none; }` to hide the jarring focus ring on the main container when the skip link is used. Additionally, consider `html { scroll-behavior: smooth; }` to make the jump visually smooth, but ensure it respects `prefers-reduced-motion: reduce`.

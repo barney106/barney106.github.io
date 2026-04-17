@@ -37,6 +37,16 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-dark);
@@ -412,6 +422,10 @@
             top: 0;
             outline: 2px solid white;
             outline-offset: -2px;
+        }
+
+        #main-content:focus {
+            outline: none;
         }
     </style>
 </head>

@@ -35,3 +35,7 @@
 ## 2026-04-14 - Adding Skip-to-Content Links
 **Learning:** Screen reader and keyboard users navigate visually complex or long pages linearly. Without a way to bypass repetitive top-level navigation, ambient animations, or headers, reaching the main content is tedious. Adding a `skip-link` that is visually hidden but appears on `focus` creates an immediate accessibility win without compromising the visual design.
 **Action:** Ensure that apps with rich headers or repeating navigation include a `.skip-link` right after the `<body>` tag pointing directly to the `<main>` content id.
+
+## 2026-05-15 - Context Switches for External Links
+**Learning:** Links that open in a new tab (`target="_blank"`) without warning can be disorienting, especially for users relying on screen readers or those with cognitive disabilities, as the back button no longer works.
+**Action:** For external links (`target="_blank"`), always append ` (abre en una pestaña nueva)` to the `aria-label` and include a visual indicator (e.g., an external link SVG icon) to warn users visually and via screen readers about the context switch.

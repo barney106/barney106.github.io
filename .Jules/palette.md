@@ -39,3 +39,7 @@
 ## 2026-04-15 - Refining Skip-to-Content UX (Smooth Scroll & Focus Outline)
 **Learning:** While skip-to-content links require `tabindex="-1"` on the target container (like `<main>`) to programmatically receive focus, this causes browsers to render a massive, visually jarring focus ring around the entire content area. Also, an instantaneous jump can be disorienting.
 **Action:** Always add `#main-content:focus { outline: none; }` to hide the jarring focus ring on the main container when the skip link is used. Additionally, consider `html { scroll-behavior: smooth; }` to make the jump visually smooth, but ensure it respects `prefers-reduced-motion: reduce`.
+
+## 2026-04-18 - External Link Context Warning
+**Learning:** External links (`target="_blank"`) that open a new tab often disrupt a user's flow, especially for screen reader users and users with cognitive disabilities who may not realize the context has switched.
+**Action:** When a link opens in a new tab, add an inline SVG icon to give visual indication and append ` (abre en una pestaña nueva)` to the `aria-label` to provide explicit warning of the context switch.

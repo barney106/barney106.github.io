@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maker Cost Calc - Calcula el coste real de tus impresiones 3D</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            accent: '#4ade80'
+                        },
+                        darkBg: '#090d16',
+                        darkCard: '#111827',
+                        darkBorder: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        .light ::-webkit-scrollbar-track {
+            background: #f3f4f6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #16a34a;
+            border-radius: 4px;
+        }
+        
+        /* Smooth scale hover effects */
+        .hover-lift {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-gray-100 font-sans transition-colors duration-300 dark:bg-darkBg dark:text-gray-100 light:bg-slate-50 light:text-gray-800">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 backdrop-blur-md bg-darkBg/80 border-b border-darkBorder/40 light:bg-white/80 light:border-slate-200" id="mainHeader">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-400 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                    <!-- Isometric Cube SVG Logo -->
+                    <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div>
+                    <span class="text-lg font-bold tracking-tight text-white light:text-slate-900 block leading-tight">Maker <span class="text-brand-400 font-extrabold">Cost Calc</span></span>
+                    <span class="text-xs text-gray-400 light:text-slate-500 block">Calculadora de Impresión 3D</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#caracteristicas" class="text-gray-300 hover:text-brand-400 transition-colors light:text-slate-600 light:hover:text-brand-600">Características</a>
+                <a href="#calculadora" class="text-gray-300 hover:text-brand-400 transition-colors light:text-slate-600 light:hover:text-brand-600">Calculadora Online</a>
+                <a href="#capturas" class="text-gray-300 hover:text-brand-400 transition-colors light:text-slate-600 light:hover:text-brand-600">Capturas</a>
+                <a href="#faq" class="text-gray-300 hover:text-brand-400 transition-colors light:text-slate-600 light:hover:text-brand-600">FAQ</a>
+                <a href="#contacto" class="text-gray-300 hover:text-brand-400 transition-colors light:text-slate-600 light:hover:text-brand-600">Contacto</a>
+            </nav>
+
+            <!-- Actions and Theme Switcher -->
+            <div class="flex items-center gap-4">
+                <!-- Theme toggle button -->
+                <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-800 border border-slate-700/60 text-yellow-400 hover:bg-slate-700 hover:text-yellow-300 transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 light:bg-slate-100 light:border-slate-200 light:text-slate-600 light:hover:bg-slate-200" aria-label="Cambiar tema">
+                    <!-- Sun / Moon Icon dynamically changed -->
+                    <svg id="themeIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <!-- Default Dark mode icon (Moon) -->
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                </button>
+
+                <!-- Download CTA Header Button -->
+                <a href="#descargar" class="hidden sm:inline-flex items-center justify-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-500 transition-all hover:shadow-lg hover:shadow-brand-500/20 active:scale-95">
+                    Descargar Gratis
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-gray-400 hover:text-white focus:outline-none light:text-slate-600 light:hover:text-slate-900" aria-label="Menu">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-darkBg/95 border-b border-darkBorder py-4 px-6 space-y-3 transition-all duration-300 light:bg-white light:border-slate-200">
+            <a href="#caracteristicas" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-400 font-medium light:text-slate-600">Características</a>
+            <a href="#calculadora" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-400 font-medium light:text-slate-600">Calculadora Online</a>
+            <a href="#capturas" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-400 font-medium light:text-slate-600">Capturas</a>
+            <a href="#faq" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-400 font-medium light:text-slate-600">FAQ</a>
+            <a href="#contacto" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-brand-400 font-medium light:text-slate-600">Contacto</a>
+            <a href="#descargar" onclick="toggleMobileMenu()" class="w-full inline-flex items-center justify-center px-4 py-3 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-500">Descargar Gratis</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-32 pb-24 overflow-hidden bg-gradient-to-b from-darkBg via-slate-950 to-darkBg light:from-white light:via-slate-50 light:to-white">
+        <!-- Background decorative glow -->
+        <div class="absolute top-20 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-brand-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                
+                <!-- Hero Left: Title and CTAs -->
+                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                    <!-- App Tag -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/50 text-xs sm:text-sm text-brand-300 font-semibold shadow-inner light:bg-emerald-50 light:border-emerald-200 light:text-emerald-700">
+                        <span class="text-amber-400">★</span> #1 App para Makers y Creadores 3D
+                    </div>
+
+                    <!-- Main Headline -->
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight light:text-slate-950">
+                        Calcula el coste real de tus <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-emerald-400 font-black">impresiones 3D</span>
+                    </h1>
+
+                    <!-- Subtitle -->
+                    <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed light:text-slate-600">
+                        Ahorra dinero, optimiza tus proyectos y conoce el coste exacto de filamento, resina, electricidad y tiempo de uso antes de encender tu impresora.
+                    </p>
+
+                    <!-- CTA Store Buttons & Actions -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <!-- Play Store Button Mockup -->
+                        <a href="#descargar" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-black text-white hover:bg-slate-900 transition-all border border-slate-800 hover:border-slate-700 shadow-xl group hover:-translate-y-0.5">
+                            <svg class="w-8 h-8 text-white transition-transform group-hover:scale-105" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3.25 2.3a1.5 1.5 0 0 0-.15 2.16l8.82 8.82-8.82 8.82a1.5 1.5 0 0 0 .15 2.16c.55.44 1.34.4 1.84-.1l9.84-9.84a1.5 1.5 0 0 0 0-2.12L5.09 2.2a1.5 1.5 0 0 0-1.84.1z"/>
+                                <path d="M12.92 12l5.77-5.77a1.5 1.5 0 0 0 0-2.12 1.5 1.5 0 0 0-2.12 0L10.8 9.88l2.12 2.12z"/>
+                            </svg>
+                            <div class="text-left">
+                                <span class="text-[10px] text-gray-400 uppercase tracking-widest block font-semibold">Consíguelo en</span>
+                                <span class="text-lg font-bold block leading-none">Google Play</span>
+                            </div>
+                        </a>
+
+                        <!-- Watch Video CTA (opens Custom Interactive Modal) -->
+                        <button onclick="openVideoModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl bg-slate-800/60 border border-slate-700/50 hover:bg-slate-700/60 text-gray-200 font-semibold transition-all hover:shadow-lg light:bg-slate-200/50 light:border-slate-300 light:text-slate-800 light:hover:bg-slate-200">
+                            <!-- Play Icon -->
+                            <svg class="w-5 h-5 text-brand-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                            Ver vídeo (45s)
+                        </button>
+                    </div>
+
+                    <!-- Quality Badges -->
+                    <div class="grid grid-cols-3 gap-4 pt-6 max-w-md mx-auto lg:mx-0 border-t border-slate-800/60 light:border-slate-200">
+                        <div class="flex items-center gap-2 justify-center lg:justify-start">
+                            <span class="text-brand-400 text-lg">✔</span>
+                            <span class="text-xs sm:text-sm text-gray-300 font-medium light:text-slate-600">100% Gratuita</span>
+                        </div>
+                        <div class="flex items-center gap-2 justify-center lg:justify-start">
+                            <span class="text-brand-400 text-lg">✔</span>
+                            <span class="text-xs sm:text-sm text-gray-300 font-medium light:text-slate-600">Privacidad Total</span>
+                        </div>
+                        <div class="flex items-center gap-2 justify-center lg:justify-start">
+                            <span class="text-brand-400 text-lg">✔</span>
+                            <span class="text-xs sm:text-sm text-gray-300 font-medium light:text-slate-600">Funciona Offline</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Right: Realistic Device Mockup rendering app content dynamically -->
+                <div class="lg:col-span-5 flex justify-center relative">
+                    <!-- Background ambient shadow -->
+                    <div class="absolute inset-0 bg-brand-500/20 blur-[80px] rounded-full scale-75 -z-10"></div>
+                    
+                    <!-- HTML-Built Phone Frame Mockup -->
+                    <div class="relative w-[300px] h-[610px] sm:w-[320px] sm:h-[650px] bg-black rounded-[40px] p-3.5 shadow-2xl border-4 border-slate-800/80 ring-1 ring-slate-700/50 flex flex-col overflow-hidden">
+                        <!-- Speaker / Camera Notch -->
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-30 flex items-center justify-center gap-1.5">
+                            <div class="w-1.5 h-1.5 bg-slate-800 rounded-full"></div>
+                            <div class="w-10 h-1 bg-slate-900 rounded-full"></div>
+                        </div>
+
+                        <!-- App Content Area -->
+                        <div class="flex-1 rounded-[32px] bg-darkBg text-white p-4 pt-8 flex flex-col relative overflow-y-auto no-scrollbar">
+                            <!-- App Header -->
+                            <div class="flex items-center justify-between mb-4 mt-2">
+                                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Resultado Cálculo</span>
+                                <span class="px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400 text-[10px] font-bold">ACTIVO</span>
+                            </div>
+
+                            <!-- Screen Result Panel -->
+                            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 text-center space-y-1 shadow-inner relative overflow-hidden">
+                                <div class="absolute -top-10 -right-10 w-24 h-24 bg-brand-500/10 rounded-full blur-xl"></div>
+                                <span class="text-xs text-gray-400 block uppercase font-medium tracking-wide">Coste Total Estimado</span>
+                                <span class="text-4xl font-extrabold text-brand-400 block tracking-tight" id="heroLiveTotal">2,45 €</span>
+                            </div>
+
+                            <!-- Real-time Live Sync Indicator -->
+                            <div class="flex items-center gap-1.5 justify-center py-2 text-[10px] text-emerald-400 font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                                Sincronizado con calculadora online
+                            </div>
+
+                            <!-- Detailed breakdown list in App -->
+                            <div class="space-y-2.5 mt-2 flex-1">
+                                <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/40">
+                                    <span class="text-xs text-gray-400 font-medium">Filamento / Resina</span>
+                                    <span class="text-sm font-semibold text-white" id="heroLiveFil">1,62 €</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/40">
+                                    <span class="text-xs text-gray-400 font-medium">Consumo Eléctrico</span>
+                                    <span class="text-sm font-semibold text-white" id="heroLiveElec">0,18 €</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/40">
+                                    <span class="text-xs text-gray-400 font-medium">Tiempo de uso</span>
+                                    <span class="text-sm font-semibold text-white" id="heroLiveTime">0,45 €</span>
+                                </div>
+                                <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/40">
+                                    <span class="text-xs text-gray-400 font-medium">Otros (Desgaste, etc)</span>
+                                    <span class="text-sm font-semibold text-white" id="heroLiveOther">0,20 €</span>
+                                </div>
+                            </div>
+
+                            <!-- Mobile App Summary Box -->
+                            <div class="p-3 bg-slate-950 rounded-xl space-y-1.5 mt-3 border border-slate-900 text-[11px]">
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Peso total:</span>
+                                    <span class="text-white font-bold" id="heroLiveWeight">58.3 g</span>
+                                </div>
+                                <div class="flex justify-between text-gray-400">
+                                    <span>Tiempo de impresión:</span>
+                                    <span class="text-white font-bold" id="heroLiveDuration">4h 32m</span>
+                                </div>
+                            </div>
+
+                            <!-- App Action button -->
+                            <button class="w-full mt-4 py-2.5 rounded-xl bg-brand-600 text-white font-bold text-xs hover:bg-brand-500 transition-colors shadow-lg shadow-brand-600/20">
+                                GUARDAR EN HISTORIAL
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Decorative Floating Badges on Phone -->
+                    <div class="absolute -left-6 top-1/4 p-3 bg-slate-900/90 border border-slate-800 rounded-xl shadow-xl flex items-center gap-2 animate-bounce max-w-[130px] sm:max-w-none" style="animation-duration: 4s;">
+                        <span class="text-xl">⚡</span>
+                        <div>
+                            <span class="text-[10px] text-gray-400 block leading-none">Instantáneo</span>
+                            <span class="text-xs font-bold text-white block">Sin recargar</span>
+                        </div>
+                    </div>
+
+                    <div class="absolute -right-6 bottom-1/4 p-3 bg-slate-900/90 border border-slate-800 rounded-xl shadow-xl flex items-center gap-2 animate-bounce max-w-[130px] sm:max-w-none" style="animation-duration: 5s;">
+                        <span class="text-xl">📊</span>
+                        <div>
+                            <span class="text-[10px] text-gray-400 block leading-none">Análisis</span>
+                            <span class="text-xs font-bold text-white block">Gráficas 3D</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- KEY FEATURES ROW -->
+    <section id="caracteristicas" class="py-16 bg-slate-950 border-y border-darkBorder/40 light:bg-white light:border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+                
+                <!-- Col 1 -->
+                <div class="p-4 hover-lift bg-slate-900/40 rounded-2xl border border-slate-800/40 light:bg-slate-50 light:border-slate-100">
+                    <div class="w-12 h-12 bg-brand-500/10 text-brand-400 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold text-white light:text-slate-900">Cálculo preciso</h3>
+                    <p class="text-xs text-gray-400 mt-1 light:text-slate-500">Obtén el coste exacto de cada gramo.</p>
+                </div>
+
+                <!-- Col 2 -->
+                <div class="p-4 hover-lift bg-slate-900/40 rounded-2xl border border-slate-800/40 light:bg-slate-50 light:border-slate-100">
+                    <div class="w-12 h-12 bg-brand-500/10 text-brand-400 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold text-white light:text-slate-900">Electricidad</h3>
+                    <p class="text-xs text-gray-400 mt-1 light:text-slate-500">Añade tarifas locales y consumo exacto.</p>
+                </div>
+
+                <!-- Col 3 -->
+                <div class="p-4 hover-lift bg-slate-900/40 rounded-2xl border border-slate-800/40 light:bg-slate-50 light:border-slate-100">
+                    <div class="w-12 h-12 bg-brand-500/10 text-brand-400 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold text-white light:text-slate-900">Tiempo real</h3>
+                    <p class="text-xs text-gray-400 mt-1 light:text-slate-500">Calcula al instante mientras escribes.</p>
+                </div>
+
+                <!-- Col 4 -->
+                <div class="p-4 hover-lift bg-slate-900/40 rounded-2xl border border-slate-800/40 light:bg-slate-50 light:border-slate-100">
+                    <div class="w-12 h-12 bg-brand-500/10 text-brand-400 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold text-white light:text-slate-900">Historial</h3>
+                    <p class="text-xs text-gray-400 mt-1 light:text-slate-500">Guarda tus proyectos y analízalos.</p>
+                </div>
+
+                <!-- Col 5 (Colspan 2 en móvil para centrar) -->
+                <div class="col-span-2 md:col-span-1 p-4 hover-lift bg-slate-900/40 rounded-2xl border border-slate-800/40 light:bg-slate-50 light:border-slate-100">
+                    <div class="w-12 h-12 bg-brand-500/10 text-brand-400 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold text-white light:text-slate-900">100% Offline</h3>
+                    <p class="text-xs text-gray-400 mt-1 light:text-slate-500">Tus datos en tu dispositivo, sin internet.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CALCULATOR SECTION -->
+    <section id="calculadora" class="py-24 bg-darkBg text-white light:bg-slate-100 light:text-slate-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Calculator Left: Info and illustrative graphic -->
+                <div class="lg:col-span-5 space-y-6">
+                    <span class="text-xs text-brand-400 font-bold tracking-wider uppercase block">PRUÉBALO AHORA</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white light:text-slate-900 tracking-tight leading-none">
+                        Calculadora Online Estimación rápida
+                    </h2>
+                    <p class="text-gray-400 light:text-slate-600">
+                        Introduce los datos esenciales de tu impresión para verificar la precisión del algoritmo de la app al instante.
+                    </p>
+
+                    <!-- Interactive Animated 3D Printer SVG Graphic -->
+                    <div class="p-6 bg-slate-900/50 rounded-3xl border border-slate-800/60 light:bg-white light:border-slate-200 shadow-xl relative overflow-hidden flex items-center justify-center min-h-[220px]">
+                        <!-- SVG graphic representing printer activity -->
+                        <svg class="w-full max-w-[280px] h-auto" viewBox="0 0 200 150" fill="none">
+                            <!-- Bed of the printer -->
+                            <rect x="30" y="110" width="140" height="8" rx="2" fill="#334155" />
+                            <!-- Heated bed surface -->
+                            <line x1="35" y1="110" x2="165" y2="110" stroke="#10b981" stroke-width="2" class="animate-pulse" />
+                            <!-- Frame -->
+                            <path d="M45 110V40H155V110" stroke="#475569" stroke-width="6" stroke-linecap="round"/>
+                            <!-- Spool holder -->
+                            <circle cx="155" cy="30" r="15" stroke="#64748b" stroke-width="4" />
+                            <circle cx="155" cy="30" r="8" fill="#10b981" />
+                            <!-- Extruder carriage gantry -->
+                            <line x1="45" y1="65" x2="155" y2="65" stroke="#475569" stroke-width="4" />
+                            <!-- Toolhead / Extruder carriage moving -->
+                            <g class="animate-bounce" style="animation-duration: 2.5s;">
+                                <rect x="85" y="55" width="30" height="20" rx="3" fill="#1e293b" stroke="#64748b" stroke-width="2" />
+                                <polygon points="95,75 105,75 100,85" fill="#f59e0b" />
+                                <circle cx="100" cy="85" r="1.5" fill="#ef4444" />
+                            </g>
+                            <!-- Print model rendering (Benchy outline/cube) -->
+                            <g class="animate-pulse">
+                                <path d="M80 110 L90 95 L110 95 L120 110 Z" fill="#10b981" fill-opacity="0.3" stroke="#10b981" stroke-width="1.5" />
+                                <rect x="92" y="85" width="16" height="10" fill="#10b981" fill-opacity="0.4" stroke="#10b981" stroke-width="1.5" />
+                            </g>
+                        </svg>
+                        <div class="absolute bottom-4 text-center text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                            Esquema Impresora Activa
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calculator Right: The Interactive Calculator Container -->
+                <div class="lg:col-span-7 bg-slate-900 border border-slate-800/80 rounded-[32px] p-6 sm:p-8 light:bg-white light:border-slate-200/80 shadow-2xl relative">
+                    <!-- Real-time computation form -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        
+                        <!-- Col 1 -->
+                        <div class="space-y-2">
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-300 light:text-slate-700">Peso del modelo (g)</label>
+                            <input type="number" id="calcWeight" value="50" oninput="calculateCost()" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all text-white font-medium light:bg-slate-50 light:border-slate-200 light:text-slate-950" placeholder="Ej. 120">
+                        </div>
+
+                        <!-- Col 2 -->
+                        <div class="space-y-2">
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-300 light:text-slate-700">Precio del filamento (€/kg)</label>
+                            <input type="number" id="calcFilPrice" value="20" oninput="calculateCost()" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all text-white font-medium light:bg-slate-50 light:border-slate-200 light:text-slate-950" placeholder="Ej. 24.90">
+                        </div>
+
+                        <!-- Col 3 -->
+                        <div class="space-y-2">
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-300 light:text-slate-700">Consumo eléctrico de impresora (kW)</label>
+                            <input type="number" id="calcPower" value="0.15" step="0.01" oninput="calculateCost()" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all text-white font-medium light:bg-slate-50 light:border-slate-200 light:text-slate-950" placeholder="Ej. 0.15">
+                        </div>
+
+                        <!-- Col 4 -->
+                        <div class="space-y-2">
+                            <label class="block text-xs sm:text-sm font-semibold text-gray-300 light:text-slate-700">Precio electricidad (€/kWh)</label>
+                            <input type="number" id="calcElecPrice" value="0.25" step="0.01" oninput="calculateCost()" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all text-white font-medium light:bg-slate-50 light:border-slate-200 light:text-slate-950" placeholder="Ej. 0.22">
+                        </div>
+
+                        <!-- Col 5: Time input split (Hours and Minutes) -->
+                        <div class="sm:col-span-2 grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="block text-xs sm:text-sm font-semibold text-gray-300 light:text-slate-700">Tiempo de impresión (Horas)</label>
+                                <input type="number" id="calcHours" value="4" oninput="calculateCost()" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all text-white font-medium light:bg-slate-50 light:border-slate-200 light:text-slate-950" placeholder="0">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-xs sm:text-sm font-semibold text-gray-300 light:text-slate-700">Minutos</label>
+                                <input type="number" id="calcMinutes" value="30" max="59" oninput="calculateCost()" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all text-white font-medium light:bg-slate-50 light:border-slate-200 light:text-slate-950" placeholder="30">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Instant Interactive Results Box -->
+                    <div class="mt-8 pt-6 border-t border-slate-800/80 light:border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        
+                        <!-- Breakdown cost values -->
+                        <div class="flex-1 space-y-2.5">
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-400 light:text-slate-500 font-medium">Filamento:</span>
+                                <span class="font-semibold text-white light:text-slate-900" id="resFil">1,00 €</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-400 light:text-slate-500 font-medium">Electricidad:</span>
+                                <span class="font-semibold text-white light:text-slate-900" id="resElec">0,17 €</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-400 light:text-slate-500 font-medium">Otros (Desgaste, etc):</span>
+                                <span class="font-semibold text-white light:text-slate-900" id="resOther">0,23 €</span>
+                            </div>
+                        </div>
+
+                        <!-- Main Big Total Cost Box -->
+                        <div class="p-5 bg-slate-950 rounded-2xl text-center md:min-w-[200px] border border-slate-800 light:bg-slate-50 light:border-slate-200">
+                            <span class="text-xs text-gray-400 block uppercase font-bold tracking-wider">Coste Total Estimado</span>
+                            <span class="text-3xl font-extrabold text-brand-400 block tracking-tight mt-1" id="resTotal">1,40 €</span>
+                        </div>
+                    </div>
+
+                    <!-- Calculator Trigger Button with active sound click feeling -->
+                    <button onclick="triggerFlashCalculation()" class="w-full mt-6 py-4 rounded-xl bg-brand-600 text-white font-bold hover:bg-brand-500 transition-all shadow-lg shadow-brand-600/10 hover:shadow-brand-500/20 active:scale-[0.98]">
+                        ⚡ Actualizar e Informar a App
+                    </button>
+                    
+                    <!-- Flash Toast Notification -->
+                    <div id="calcToast" class="absolute -bottom-10 left-1/2 -translate-x-1/2 px-4 py-2 bg-brand-600 text-white text-xs font-bold rounded-full shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none flex items-center gap-1.5">
+                        <span>✔</span> ¡Datos sincronizados con la App de demostración!
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CAROUSEL SCREENSHOT SHOWCASE -->
+    <section id="capturas" class="py-24 bg-slate-950 border-y border-darkBorder/40 light:bg-slate-50 light:border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <span class="text-xs text-brand-400 font-extrabold uppercase tracking-wider block">TODO LO QUE NECESITAS</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white light:text-slate-950 tracking-tight">Diseñada para makers 🚀</h2>
+                <p class="text-gray-400 light:text-slate-600">
+                    Interactúa con el carrusel para descubrir la potencia de análisis y personalización que ofrece la aplicación móvil.
+                </p>
+            </div>
+
+            <!-- Interactive App Screens Slide Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left panel: App Info Cards switcher -->
+                <div class="lg:col-span-5 space-y-4">
+                    <!-- Nav items act as selectors for the preview device -->
+                    <button onclick="switchAppScreen(0)" id="switchBtn-0" class="w-full text-left p-4 rounded-2xl border transition-all duration-300 flex items-start gap-4 active-tab-style bg-slate-900 border-brand-500/40 text-white shadow-lg light:bg-white">
+                        <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold">1</div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base">Análisis de Resultados</h3>
+                            <p class="text-xs text-gray-400 light:text-slate-500 mt-1">Detalle exhaustivo de gastos con guardado inmediato en tu diario.</p>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAppScreen(1)" id="switchBtn-1" class="w-full text-left p-4 rounded-2xl border border-slate-800/40 hover:bg-slate-900/40 transition-all duration-300 flex items-start gap-4 text-gray-400 hover:text-white light:bg-white light:border-slate-200 light:text-slate-600 light:hover:text-slate-900">
+                        <div class="w-10 h-10 rounded-xl bg-slate-800 text-gray-400 flex items-center justify-center font-bold">2</div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base">Filamentos y Resinas</h3>
+                            <p class="text-xs text-gray-500 mt-1">Configura múltiples bobinas con precios, colores, pesos y marcas.</p>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAppScreen(2)" id="switchBtn-2" class="w-full text-left p-4 rounded-2xl border border-slate-800/40 hover:bg-slate-900/40 transition-all duration-300 flex items-start gap-4 text-gray-400 hover:text-white light:bg-white light:border-slate-200 light:text-slate-600 light:hover:text-slate-900">
+                        <div class="w-10 h-10 rounded-xl bg-slate-800 text-gray-400 flex items-center justify-center font-bold">3</div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base">Historial completo</h3>
+                            <p class="text-xs text-gray-500 mt-1">Visualiza y filtra registros para comparar costes entre impresiones.</p>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAppScreen(3)" id="switchBtn-3" class="w-full text-left p-4 rounded-2xl border border-slate-800/40 hover:bg-slate-900/40 transition-all duration-300 flex items-start gap-4 text-gray-400 hover:text-white light:bg-white light:border-slate-200 light:text-slate-600 light:hover:text-slate-900">
+                        <div class="w-10 h-10 rounded-xl bg-slate-800 text-gray-400 flex items-center justify-center font-bold">4</div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base">Gráficas y Estadísticas</h3>
+                            <p class="text-xs text-gray-500 mt-1">Diagramas visuales sobre tus costes mensuales y consumos anuales.</p>
+                        </div>
+                    </button>
+
+                    <button onclick="switchAppScreen(4)" id="switchBtn-4" class="w-full text-left p-4 rounded-2xl border border-slate-800/40 hover:bg-slate-900/40 transition-all duration-300 flex items-start gap-4 text-gray-400 hover:text-white light:bg-white light:border-slate-200 light:text-slate-600 light:hover:text-slate-900">
+                        <div class="w-10 h-10 rounded-xl bg-slate-800 text-gray-400 flex items-center justify-center font-bold">5</div>
+                        <div>
+                            <h3 class="font-bold text-sm sm:text-base">Personaliza todo</h3>
+                            <p class="text-xs text-gray-500 mt-1">Ajusta tus tasas impositivas, moneda base y costes de mantenimiento.</p>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Right Column: Simulated Live App Display Frame -->
+                <div class="lg:col-span-7 flex flex-col items-center justify-center">
+                    
+                    <!-- App Screen container -->
+                    <div class="relative w-[290px] h-[580px] sm:w-[310px] sm:h-[620px] bg-black rounded-[40px] p-3 shadow-2xl border-4 border-slate-800 flex flex-col overflow-hidden">
+                        <!-- Speaker / Camera Notch -->
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-2xl z-30 flex items-center justify-center gap-1.5">
+                            <div class="w-1.5 h-1.5 bg-slate-800 rounded-full"></div>
+                            <div class="w-10 h-1 bg-slate-900 rounded-full"></div>
+                        </div>
+
+                        <!-- Screen dynamic display -->
+                        <div id="screenViewer" class="flex-1 rounded-[30px] bg-darkBg text-white p-4 pt-8 flex flex-col overflow-y-auto no-scrollbar relative transition-all duration-500">
+                            <!-- Dynamically loaded screen template content -->
+                        </div>
+
+                        <!-- Bottom Slide Controls Inside Frame -->
+                        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 bg-slate-950/80 px-3 py-1.5 rounded-full backdrop-blur-sm border border-slate-800/50">
+                            <button onclick="prevAppScreen()" class="p-1 text-gray-400 hover:text-white" aria-label="Anterior">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                            </button>
+                            <span class="text-[10px] font-mono text-gray-400" id="carouselCounter">1/5</span>
+                            <button onclick="nextAppScreen()" class="p-1 text-gray-400 hover:text-white" aria-label="Siguiente">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Outside Navigation dots -->
+                    <div class="flex gap-2.5 mt-6">
+                        <button onclick="switchAppScreen(0)" class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-brand-500" id="carouselDot-0"></button>
+                        <button onclick="switchAppScreen(1)" class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-slate-700" id="carouselDot-1"></button>
+                        <button onclick="switchAppScreen(2)" class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-slate-700" id="carouselDot-2"></button>
+                        <button onclick="switchAppScreen(3)" class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-slate-700" id="carouselDot-3"></button>
+                        <button onclick="switchAppScreen(4)" class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-slate-700" id="carouselDot-4"></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section class="py-24 bg-darkBg text-white light:bg-white light:text-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <span class="text-xs text-brand-400 font-extrabold uppercase tracking-wider block">OPINIONES DE LA COMUNIDAD</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white light:text-slate-950 tracking-tight">Opiniones reales de makers ⭐</h2>
+                <p class="text-gray-400 light:text-slate-600">Descubre cómo nuestra calculadora ha ayudado a cientos de personas a rentabilizar sus creaciones.</p>
+            </div>
+
+            <!-- Testimonials Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Card 1 -->
+                <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 light:bg-slate-50 light:border-slate-200/60 shadow-xl space-y-4 relative flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex text-amber-400 text-lg">★★★★★</div>
+                        <h3 class="font-bold text-white light:text-slate-950">"Indispensable en mi día a día"</h3>
+                        <p class="text-sm text-gray-400 light:text-slate-600">
+                            "Por fin sé cuánto me cuesta exactamente imprimir cada pieza. Muy intuitiva y fácil de usar. El registro de bobinas me ahorra tener que pesar el filamento cada vez."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3.5 pt-4 border-t border-slate-800/60 light:border-slate-200">
+                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-sm text-brand-400">JM</div>
+                        <div>
+                            <span class="font-bold text-xs text-white block light:text-slate-900">Javier M.</span>
+                            <span class="text-[10px] text-gray-500 block">Maker / Ingeniero Industrial</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 light:bg-slate-50 light:border-slate-200/60 shadow-xl space-y-4 relative flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex text-amber-400 text-lg">★★★★★</div>
+                        <h3 class="font-bold text-white light:text-slate-950">"La mejor calculadora que he usado"</h3>
+                        <p class="text-sm text-gray-400 light:text-slate-600">
+                            "Incluye todo: coste del filamento, desgaste de boquilla, consumo eléctrico personalizado y opción de añadir resina para SLA. Un 10 de 10."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3.5 pt-4 border-t border-slate-800/60 light:border-slate-200">
+                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-sm text-brand-400">LG</div>
+                        <div>
+                            <span class="font-bold text-xs text-white block light:text-slate-900">Laura G.</span>
+                            <span class="text-[10px] text-gray-500 block">Diseñadora 3D & Modeladora</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 light:bg-slate-50 light:border-slate-200/60 shadow-xl space-y-4 relative flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex text-amber-400 text-lg">★★★★★</div>
+                        <h3 class="font-bold text-white light:text-slate-950">"Me ha ayudado a ahorrar mucho"</h3>
+                        <p class="text-sm text-gray-400 light:text-slate-600">
+                            "Antes estimaba los precios a ojo y perdía dinero al vender mis impresiones. Ahora calculo presupuestos infalibles en cuestión de segundos."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3.5 pt-4 border-t border-slate-800/60 light:border-slate-200">
+                        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-sm text-brand-400">CR</div>
+                        <div>
+                            <span class="font-bold text-xs text-white block light:text-slate-900">Carlos R.</span>
+                            <span class="text-[10px] text-gray-500 block">Impresión 3D Profesional</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="py-24 bg-slate-950 border-y border-darkBorder/40 light:bg-slate-50 light:border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 space-y-4">
+                <span class="text-xs text-brand-400 font-extrabold uppercase tracking-wider block">RESPUESTAS RÁPIDAS</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white light:text-slate-950 tracking-tight">Preguntas frecuentes</h2>
+                <p class="text-gray-400 light:text-slate-600">¿Tienes dudas sobre cómo funciona Maker Cost Calc? Aquí las resolvemos.</p>
+            </div>
+
+            <!-- Accordion FAQ Items -->
+            <div class="space-y-4">
+                
+                <!-- Item 1 -->
+                <div class="rounded-2xl border border-slate-800 bg-slate-900/60 light:bg-white light:border-slate-200 overflow-hidden">
+                    <button onclick="toggleFaq(1)" class="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-white light:text-slate-900 hover:bg-slate-900/30">
+                        <span>¿Cómo calcula la app el coste de electricidad?</span>
+                        <span id="faqIcon-1" class="text-brand-400 transition-transform duration-300">▼</span>
+                    </button>
+                    <div id="faqContent-1" class="hidden px-6 pb-5 text-sm text-gray-400 light:text-slate-600">
+                        La aplicación multiplica la potencia de tu impresora en kW (por ejemplo, 0.15 kW para 150W) por el tiempo de impresión calculado y por el precio por kWh de tu compañía eléctrica. Esto te dará un coste energético preciso de tu sesión de trabajo.
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="rounded-2xl border border-slate-800 bg-slate-900/60 light:bg-white light:border-slate-200 overflow-hidden">
+                    <button onclick="toggleFaq(2)" class="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-white light:text-slate-900 hover:bg-slate-900/30">
+                        <span>¿Puedo añadir costes adicionales, como desgaste o fallos?</span>
+                        <span id="faqIcon-2" class="text-brand-400 transition-transform duration-300">▼</span>
+                    </button>
+                    <div id="faqContent-2" class="hidden px-6 pb-5 text-sm text-gray-400 light:text-slate-600">
+                        ¡Sí! En los ajustes de la aplicación puedes configurar un factor de desgaste de la boquilla o el extrusor, así como un porcentaje opcional para amortizar costes generales o cubrir posibles fallos de impresión comunes.
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="rounded-2xl border border-slate-800 bg-slate-900/60 light:bg-white light:border-slate-200 overflow-hidden">
+                    <button onclick="toggleFaq(3)" class="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-white light:text-slate-900 hover:bg-slate-900/30">
+                        <span>¿Es compatible con filamentos y resinas?</span>
+                        <span id="faqIcon-3" class="text-brand-400 transition-transform duration-300">▼</span>
+                    </button>
+                    <div id="faqContent-3" class="hidden px-6 pb-5 text-sm text-gray-400 light:text-slate-600">
+                        Totalmente. Puedes crear perfiles dedicados tanto para filamentos (PLA, ABS, PETG, etc.) basados en gramos, como para resinas líquidas (SLA/DLP) basadas en mililitros, lo que permite un abanico total de tipos de impresión.
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="rounded-2xl border border-slate-800 bg-slate-900/60 light:bg-white light:border-slate-200 overflow-hidden">
+                    <button onclick="toggleFaq(4)" class="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-white light:text-slate-900 hover:bg-slate-900/30">
+                        <span>¿Mis datos se sincronizan en la nube?</span>
+                        <span id="faqIcon-4" class="text-brand-400 transition-transform duration-300">▼</span>
+                    </button>
+                    <div id="faqContent-4" class="hidden px-6 pb-5 text-sm text-gray-400 light:text-slate-600">
+                        Para maximizar tu privacidad y asegurar que la app funcione al 100% sin conexión (offline), todos los datos se almacenan de forma local y encriptada en tu dispositivo móvil. No recopilamos ningún dato personal de tus proyectos.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DOWNLOAD SECTION -->
+    <section id="descargar" class="py-24 bg-darkBg text-white light:bg-slate-100 light:text-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gradient-to-tr from-brand-600 to-emerald-600 rounded-[40px] p-8 sm:p-16 text-center space-y-8 relative overflow-hidden shadow-2xl">
+                <!-- Background visual design element -->
+                <div class="absolute -top-12 -right-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-12 -left-12 w-64 h-64 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div class="max-w-3xl mx-auto space-y-6 relative z-10 text-white">
+                    <h2 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+                        Empieza a ahorrar en cada impresión 3D
+                    </h2>
+                    <p class="text-emerald-100 text-base sm:text-lg max-w-xl mx-auto">
+                        Únete a miles de creadores de todo el mundo que ya calculan al milímetro sus costes de producción.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                        <!-- Play Store Button Banner -->
+                        <button onclick="triggerDownloadFeedback()" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-5 rounded-2xl bg-black text-white hover:bg-slate-900 transition-all border border-slate-800 hover:border-slate-700 shadow-xl group hover:scale-[1.02]">
+                            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3.25 2.3a1.5 1.5 0 0 0-.15 2.16l8.82 8.82-8.82 8.82a1.5 1.5 0 0 0 .15 2.16c.55.44 1.34.4 1.84-.1l9.84-9.84a1.5 1.5 0 0 0 0-2.12L5.09 2.2a1.5 1.5 0 0 0-1.84.1z"/>
+                                <path d="M12.92 12l5.77-5.77a1.5 1.5 0 0 0 0-2.12 1.5 1.5 0 0 0-2.12 0L10.8 9.88l2.12 2.12z"/>
+                            </svg>
+                            <div class="text-left">
+                                <span class="text-[10px] text-gray-400 uppercase tracking-widest block font-semibold">Descargar para Android</span>
+                                <span class="text-xl font-bold block leading-none">Google Play</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Free offline disclaimer -->
+                    <span class="text-xs text-emerald-100/80 block pt-2">Tamaño de descarga: ~12MB • Sin anuncios molestos</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contacto" class="bg-slate-950 text-gray-400 py-16 border-t border-slate-900 light:bg-white light:border-slate-200 light:text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                
+                <!-- Col 1: Brand details -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="text-lg font-bold text-white light:text-slate-900">Maker Cost Calc</span>
+                    </div>
+                    <p class="text-xs leading-relaxed">
+                        Desarrollado para la comunidad 3D con pasión y precisión matemática. Optimiza tus proyectos con confianza.
+                    </p>
+                </div>
+
+                <!-- Col 2: Navigation Links -->
+                <div>
+                    <h4 class="text-white light:text-slate-900 font-semibold text-sm mb-4">Navegación</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#caracteristicas" class="hover:text-brand-400">Características</a></li>
+                        <li><a href="#calculadora" class="hover:text-brand-400">Calculadora Online</a></li>
+                        <li><a href="#capturas" class="hover:text-brand-400">Modelos de App</a></li>
+                        <li><a href="#faq" class="hover:text-brand-400">Preguntas Frecuentes</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Legal stuff -->
+                <div>
+                    <h4 class="text-white light:text-slate-900 font-semibold text-sm mb-4">Legal</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" class="hover:text-brand-400">Política de Privacidad</a></li>
+                        <li><a href="#" class="hover:text-brand-400">Términos de Servicio</a></li>
+                        <li><a href="#" class="hover:text-brand-400">Contacto de Soporte</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: GitHub / Developer -->
+                <div>
+                    <h4 class="text-white light:text-slate-900 font-semibold text-sm mb-4">Comunidad</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" class="hover:text-brand-400 flex items-center gap-2"><span>★</span> Código Abierto</a></li>
+                        <li><a href="#" class="hover:text-brand-400 flex items-center gap-2"><span>⚙</span> Foros Maker</a></li>
+                        <li><a href="#" class="hover:text-brand-400 flex items-center gap-2"><span>✉</span> Sugerir funciones</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Bottom Copyright bar -->
+            <div class="pt-8 border-t border-slate-900 light:border-slate-200 text-center md:flex md:justify-between md:items-center text-xs space-y-4 md:space-y-0">
+                <span>&copy; 2026 Maker Cost Calc. Todos los derechos reservados.</span>
+                <span class="flex justify-center gap-6">
+                    <a href="#" class="hover:text-brand-400">Twitter</a>
+                    <a href="#" class="hover:text-brand-400">GitHub</a>
+                    <a href="#" class="hover:text-brand-400">Instagram</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE VIDEO MODAL (WIDGET DE REPRODUCCIÓN) -->
+    <div id="videoModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-slate-900 rounded-[32px] border border-slate-800 w-full max-w-2xl overflow-hidden shadow-2xl relative">
+            
+            <!-- Close Button -->
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/60 hover:bg-black text-white hover:text-brand-400 transition-colors">
+                ✕
+            </button>
+
+            <!-- Video Player Simulation with high-fidelity -->
+            <div class="relative aspect-video bg-black flex items-center justify-center">
+                <!-- Video Cover Overlay -->
+                <div id="videoCover" class="absolute inset-0 bg-cover bg-center flex flex-col items-center justify-center p-6 space-y-4" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8));">
+                    <div class="w-16 h-16 rounded-full bg-brand-500 text-white flex items-center justify-center shadow-lg shadow-brand-500/30 hover:scale-105 transition-transform cursor-pointer" onclick="startSimulatedVideo()">
+                        <svg class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-white text-lg">Maker Cost Calc en Acción</h4>
+                        <p class="text-xs text-gray-400 max-w-sm mx-auto mt-1">Descubre la facilidad de guardar impresiones y analizar tus bobinas en 45 segundos.</p>
+                    </div>
+                </div>
+
+                <!-- Simulated Video Progress Playing Interface -->
+                <div id="videoPlayerSim" class="hidden w-full h-full flex flex-col justify-between p-4 relative bg-slate-950">
+                    <div class="flex items-center justify-between text-xs text-gray-400">
+                        <span class="px-2 py-0.5 rounded bg-brand-500/20 text-brand-400 font-bold uppercase tracking-wider">Demostración en vivo</span>
+                        <span id="videoTimer">00:00 / 00:45</span>
+                    </div>
+
+                    <!-- Simulated print visualization rendering dynamic text values -->
+                    <div class="text-center space-y-2">
+                        <div class="inline-block px-3 py-1 bg-slate-900 rounded-full border border-slate-800 text-xs text-brand-400 font-semibold" id="simVideoAction">
+                            Paso 1: Introduce el peso de la pieza
+                        </div>
+                        <div class="text-3xl font-extrabold text-white" id="simVideoScreenText">
+                            50 gramos
+                        </div>
+                    </div>
+
+                    <!-- Video Controls layout bar -->
+                    <div class="space-y-2">
+                        <!-- Simulated timeline bar progress -->
+                        <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                            <div id="videoProgressBar" class="h-full bg-brand-500" style="width: 0%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-3">
+                                <button class="text-brand-400">⏸ Pausar</button>
+                                <span class="text-gray-500">Volumen: 100%</span>
+                            </div>
+                            <span class="text-brand-400 font-bold">Autoreproducción activa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GENERAL INTERACTIVE SCRIPT LOGIC -->
+    <script>
+        // Real-time calculation calculation logic (syncs down with phone screen)
+        function calculateCost() {
+            // Retrieve input values safely
+            const weight = parseFloat(document.getElementById('calcWeight').value) || 0;
+            const filPrice = parseFloat(document.getElementById('calcFilPrice').value) || 0;
+            const power = parseFloat(document.getElementById('calcPower').value) || 0;
+            const elecPrice = parseFloat(document.getElementById('calcElecPrice').value) || 0;
+            const hours = parseFloat(document.getElementById('calcHours').value) || 0;
+            const minutes = parseFloat(document.getElementById('calcMinutes').value) || 0;
+
+            // Conversion and intermediate math
+            const totalHours = hours + (minutes / 60);
+            
+            // Filament cost: weight in kilograms * cost per kilogram
+            const costFilament = (weight / 1000) * filPrice;
+            
+            // Electricity cost: kw consumed * hours * electricity rate per kwh
+            const costElectricity = power * totalHours * elecPrice;
+            
+            // Other costs: wear factor (constant e.g., 0.05/hour) + 5% overhead margin
+            const costOthers = (totalHours * 0.04) + ((costFilament + costElectricity) * 0.05);
+
+            // Total Cost Sum
+            const totalCost = costFilament + costElectricity + costOthers;
+
+            // Update on-screen fast online calculator results
+            document.getElementById('resFil').innerText = `${costFilament.toFixed(2).replace('.', ',')} €`;
+            document.getElementById('resElec').innerText = `${costElectricity.toFixed(2).replace('.', ',')} €`;
+            document.getElementById('resOther').innerText = `${costOthers.toFixed(2).replace('.', ',')} €`;
+            document.getElementById('resTotal').innerText = `${totalCost.toFixed(2).replace('.', ',')} €`;
+
+            // Real-time dynamic updates directly into the Hero Phone Showcase (live-syncing feel!)
+            document.getElementById('heroLiveTotal').innerText = `${totalCost.toFixed(2).replace('.', ',')} €`;
+            document.getElementById('heroLiveFil').innerText = `${costFilament.toFixed(2).replace('.', ',')} €`;
+            document.getElementById('heroLiveElec').innerText = `${costElectricity.toFixed(2).replace('.', ',')} €`;
+            document.getElementById('heroLiveTime').innerText = `${(totalHours * 0.1).toFixed(2).replace('.', ',')} €`;
+            document.getElementById('heroLiveOther').innerText = `${costOthers.toFixed(2).replace('.', ',')} €`;
+            
+            document.getElementById('heroLiveWeight').innerText = `${weight.toFixed(1)} g`;
+            
+            // Format dynamic duration
+            let durationStr = '';
+            if (hours > 0) durationStr += `${Math.floor(hours)}h `;
+            if (minutes > 0) durationStr += `${Math.floor(minutes)}m`;
+            if (durationStr === '') durationStr = '0m';
+            document.getElementById('heroLiveDuration').innerText = durationStr;
+        }
+
+        // Action trigger to showcase dynamic synchronization to user
+        function triggerFlashCalculation() {
+            calculateCost();
+            
+            const toast = document.getElementById('calcToast');
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            
+            // Auto hide toast after 2.5s
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2500);
+        }
+
+        // Light/Dark Theme management
+        let isDark = true;
+        function toggleTheme() {
+            const htmlTag = document.documentElement;
+            const themeToggleIcon = document.getElementById('themeIcon');
+            
+            if (isDark) {
+                // Switch to light mode
+                htmlTag.classList.remove('dark');
+                htmlTag.classList.add('light');
+                themeToggleIcon.innerHTML = `
+                    <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 14.05a1 1 0 011.414 0l.707.707a1 1 0 01-1.414 1.414l-.707-.707a1 1 0 010-1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z" clip-rule="evenodd"></path>
+                    </svg>
+                `;
+                isDark = false;
+            } else {
+                // Switch to dark mode
+                htmlTag.classList.remove('light');
+                htmlTag.classList.add('dark');
+                themeToggleIcon.innerHTML = `
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                `;
+                isDark = true;
+            }
+        }
+
+        // Mobile Menu trigger toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // FAQ accordion toggle logic
+        function toggleFaq(id) {
+            const content = document.getElementById(`faqContent-${id}`);
+            const icon = document.getElementById(`faqIcon-${id}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerText = '▲';
+                icon.classList.add('text-brand-400');
+            } else {
+                content.classList.add('hidden');
+                icon.innerText = '▼';
+                icon.classList.remove('text-brand-400');
+            }
+        }
+
+        // APP SCREENSHOT CAROUSEL MECHANICS
+        // Render 5 high-fidelity app screens inside HTML natively
+        let currentScreenIdx = 0;
+        const screensData = [
+            // Screen 1: Cost Analysis screen
+            {
+                title: "Resultado",
+                badge: "Análisis",
+                html: `
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>Detalles del cálculo</span>
+                                <span>Activo</span>
+                            </div>
+                            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-4 text-center">
+                                <span class="text-[10px] text-emerald-400 uppercase tracking-widest block font-bold">COSTE TOTAL</span>
+                                <span class="text-3xl font-black text-white block">2,45 €</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-xs p-2 bg-slate-900 rounded-lg">
+                                    <span class="text-gray-400">Filamento</span>
+                                    <span class="font-bold text-white">1,62 €</span>
+                                </div>
+                                <div class="flex justify-between text-xs p-2 bg-slate-900 rounded-lg">
+                                    <span class="text-gray-400">Electricidad</span>
+                                    <span class="font-bold text-white">0,18 €</span>
+                                </div>
+                                <div class="flex justify-between text-xs p-2 bg-slate-900 rounded-lg">
+                                    <span class="text-gray-400">Otros</span>
+                                    <span class="font-bold text-white">0,65 €</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="w-full py-2.5 rounded-xl bg-brand-600 text-white font-bold text-xs">GUARDAR COSTE</button>
+                    </div>
+                `
+            },
+            // Screen 2: Filaments and Resins Configuration Screen
+            {
+                title: "Filamentos",
+                badge: "Biblioteca",
+                html: `
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>Bobinas guardadas</span>
+                                <span class="text-brand-400">+ Añadir</span>
+                            </div>
+                            <div class="space-y-2.5">
+                                <div class="p-2.5 bg-slate-900 rounded-xl border-l-4 border-emerald-500">
+                                    <div class="flex justify-between text-xs font-bold text-white">
+                                        <span>PLA Verde Brillante</span>
+                                        <span>20,00 €/kg</span>
+                                    </div>
+                                    <span class="text-[10px] text-gray-400 block mt-1">eSUN • Restan 450 gramos</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-900 rounded-xl border-l-4 border-amber-500">
+                                    <div class="flex justify-between text-xs font-bold text-white">
+                                        <span>PETG Negro Mate</span>
+                                        <span>24,50 €/kg</span>
+                                    </div>
+                                    <span class="text-[10px] text-gray-400 block mt-1">Prusament • Restan 800 gramos</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-900 rounded-xl border-l-4 border-purple-500">
+                                    <div class="flex justify-between text-xs font-bold text-white">
+                                        <span>Resina Standard Grey</span>
+                                        <span>42,00 €/L</span>
+                                    </div>
+                                    <span class="text-[10px] text-gray-400 block mt-1">Elegoo • Restan 200 mililitros</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-[9px] text-center text-gray-500">Añade infinitos materiales</div>
+                    </div>
+                `
+            },
+            // Screen 3: History list
+            {
+                title: "Historial",
+                badge: "Proyectos",
+                html: `
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>Lista de impresiones</span>
+                                <span class="text-xs">Filtro ▼</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="p-2.5 bg-slate-900 rounded-xl flex justify-between items-center">
+                                    <div>
+                                        <span class="text-xs font-bold text-white block">Rueda de mástil</span>
+                                        <span class="text-[9px] text-gray-500 block">Ayer, 15:32 • PLA Verde</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-brand-400">2,45 €</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-900 rounded-xl flex justify-between items-center">
+                                    <div>
+                                        <span class="text-xs font-bold text-white block">Soporte cámara</span>
+                                        <span class="text-[9px] text-gray-500 block">Lunes, 18:40 • PETG Negro</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-brand-400">1,72 €</span>
+                                </div>
+                                <div class="p-2.5 bg-slate-900 rounded-xl flex justify-between items-center">
+                                    <div>
+                                        <span class="text-xs font-bold text-white block">Engranaje Caja</span>
+                                        <span class="text-[9px] text-gray-500 block">08 Mar • PLA Verde</span>
+                                    </div>
+                                    <span class="text-xs font-bold text-brand-400">0,81 €</span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-[10px] text-center text-gray-400">Exportar historial a PDF / CSV</span>
+                    </div>
+                `
+            },
+            // Screen 4: Chart Statistics Screen with detailed inline SVGs
+            {
+                title: "Estadísticas",
+                badge: "Consumos",
+                html: `
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>Gastos Mensuales</span>
+                                <span class="text-emerald-400">Este mes</span>
+                            </div>
+                            <!-- Mini visual cost chart representation -->
+                            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800">
+                                <span class="text-[10px] text-gray-400 block">Total gastado</span>
+                                <span class="text-xl font-bold text-white block">45,67 €</span>
+                                
+                                <!-- Custom SVG dynamic chart -->
+                                <svg class="w-full h-16 mt-2" viewBox="0 0 100 40">
+                                    <path d="M0,40 Q25,30 50,15 T100,5" fill="none" stroke="#10b981" stroke-width="2" />
+                                    <path d="M0,40 Q25,30 50,15 T100,5 L100,40 L0,40 Z" fill="#10b981" fill-opacity="0.1" />
+                                    <!-- Points -->
+                                    <circle cx="50" cy="15" r="2" fill="#ef4444" />
+                                    <circle cx="100" cy="5" r="2" fill="#10b981" />
+                                </svg>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-center">
+                                <div class="p-2 bg-slate-900 rounded-lg">
+                                    <span class="text-[8px] text-gray-400 block uppercase">Filamento</span>
+                                    <span class="text-xs font-bold text-white">1,5 kg</span>
+                                </div>
+                                <div class="p-2 bg-slate-900 rounded-lg">
+                                    <span class="text-[8px] text-gray-400 block uppercase">Tiempo</span>
+                                    <span class="text-xs font-bold text-white">48 horas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-[9px] text-center text-gray-500">Visualiza la rentabilidad al instante</div>
+                    </div>
+                `
+            },
+            // Screen 5: Settings Customisation Screen
+            {
+                title: "Ajustes",
+                badge: "Configuración",
+                html: `
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <span class="text-xs text-gray-400 block">Ajustes Generales</span>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 bg-slate-900 rounded-xl">
+                                    <span class="text-xs text-white">Moneda</span>
+                                    <span class="text-xs font-bold text-brand-400">EUR (€)</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-900 rounded-xl">
+                                    <span class="text-xs text-white">Tarifa Luz defecto</span>
+                                    <span class="text-xs font-bold text-brand-400">0.25 €/kWh</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-900 rounded-xl">
+                                    <span class="text-xs text-white">Margen extra fallos</span>
+                                    <span class="text-xs font-bold text-brand-400">10%</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-slate-900 rounded-xl">
+                                    <span class="text-xs text-white">Coste desgaste / hora</span>
+                                    <span class="text-xs font-bold text-brand-400">0.05 €</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="w-full py-2 bg-slate-900 rounded-xl border border-slate-800 text-xs font-semibold">RESETEAR DEFAULT</button>
+                    </div>
+                `
+            }
+        ];
+
+        // Screen changer rendering handler
+        function renderScreen(idx) {
+            const screen = screensData[idx];
+            const viewer = document.getElementById('screenViewer');
+            
+            // Generate full inner template of the phone screen
+            viewer.innerHTML = `
+                <!-- Screen App Header -->
+                <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-2">
+                    <span class="text-xs font-bold tracking-tight text-white">${screen.title}</span>
+                    <span class="px-2 py-0.5 rounded-full bg-brand-500/10 text-brand-400 text-[9px] font-bold uppercase tracking-widest">${screen.badge}</span>
+                </div>
+                ${screen.html}
+            `;
+
+            // Update Counter Text Inside Frame
+            document.getElementById('carouselCounter').innerText = `${idx + 1}/${screensData.length}`;
+
+            // Update selectors class and indicator dot styles
+            for (let i = 0; i < screensData.length; i++) {
+                const btn = document.getElementById(`switchBtn-${i}`);
+                const dot = document.getElementById(`carouselDot-${i}`);
+                
+                if (i === idx) {
+                    btn.className = "w-full text-left p-4 rounded-2xl border transition-all duration-300 flex items-start gap-4 bg-slate-900 border-brand-500/40 text-white shadow-lg light:bg-white light:border-brand-500";
+                    dot.className = "w-2.5 h-2.5 rounded-full transition-all duration-300 bg-brand-500";
+                } else {
+                    btn.className = "w-full text-left p-4 rounded-2xl border border-slate-800/40 hover:bg-slate-900/40 transition-all duration-300 flex items-start gap-4 text-gray-400 hover:text-white light:bg-white light:border-slate-200 light:text-slate-600 light:hover:text-slate-900";
+                    dot.className = "w-2.5 h-2.5 rounded-full transition-all duration-300 bg-slate-700";
+                }
+            }
+        }
+
+        // Action switch triggering directly
+        function switchAppScreen(idx) {
+            currentScreenIdx = idx;
+            renderScreen(idx);
+        }
+
+        // Swiping/arrow screen navigation helpers
+        function nextAppScreen() {
+            currentScreenIdx = (currentScreenIdx + 1) % screensData.length;
+            renderScreen(currentScreenIdx);
+        }
+        function prevAppScreen() {
+            currentScreenIdx = (currentScreenIdx - 1 + screensData.length) % screensData.length;
+            renderScreen(currentScreenIdx);
+        }
+
+        // INTERACTIVE MODAL VIDEO PLAYBACK SIMULATION
+        let videoSimTimer = null;
+        function openVideoModal() {
+            const modal = document.getElementById('videoModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 50);
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                resetSimulatedVideo();
+            }, 300);
+        }
+
+        function startSimulatedVideo() {
+            document.getElementById('videoCover').classList.add('hidden');
+            document.getElementById('videoPlayerSim').classList.remove('hidden');
+            
+            let secondsElapsed = 0;
+            const actionText = document.getElementById('simVideoAction');
+            const screenText = document.getElementById('simVideoScreenText');
+            const progress = document.getElementById('videoProgressBar');
+            const timer = document.getElementById('videoTimer');
+
+            if (videoSimTimer) clearInterval(videoSimTimer);
+
+            videoSimTimer = setInterval(() => {
+                secondsElapsed++;
+                if (secondsElapsed > 45) {
+                    clearInterval(videoSimTimer);
+                    resetSimulatedVideo();
+                    return;
+                }
+
+                // Update Progress bar width
+                progress.style.width = `${(secondsElapsed / 45) * 100}%`;
+                timer.innerText = `00:${secondsElapsed.toString().padStart(2, '0')} / 00:45`;
+
+                // Update steps text representation dynamically
+                if (secondsElapsed < 10) {
+                    actionText.innerText = "Paso 1: Introduce el peso del filamento";
+                    screenText.innerText = "Pesar pieza (65g)";
+                } else if (secondsElapsed < 22) {
+                    actionText.innerText = "Paso 2: Introduce consumo de impresora";
+                    screenText.innerText = "Consumo eléctrico (150 W)";
+                } else if (secondsElapsed < 35) {
+                    actionText.innerText = "Paso 3: ¡Listo! Mira el desglose";
+                    screenText.innerText = "Coste Total: 1,84 €";
+                } else {
+                    actionText.innerText = "Paso 4: Guarda en el historial local";
+                    screenText.innerText = "¡Proyecto guardado con éxito!";
+                }
+            }, 1000);
+        }
+
+        function resetSimulatedVideo() {
+            if (videoSimTimer) clearInterval(videoSimTimer);
+            document.getElementById('videoCover').classList.remove('hidden');
+            document.getElementById('videoPlayerSim').classList.add('hidden');
+            document.getElementById('videoProgressBar').style.width = '0%';
+            document.getElementById('videoTimer').innerText = '00:00 / 00:45';
+        }
+
+        // Google play download mock toast feedback
+        function triggerDownloadFeedback() {
+            // Visual message feedback box instead of alert()
+            const feedback = document.createElement('div');
+            feedback.className = "fixed bottom-6 right-6 z-[101] px-5 py-4 bg-slate-900 border border-brand-500/30 text-white rounded-2xl shadow-2xl flex flex-col gap-1 transition-all duration-300 scale-95 opacity-0 text-sm max-w-sm";
+            feedback.innerHTML = `
+                <div class="flex items-center gap-2 font-bold text-brand-400">
+                    <span>✔</span> Descarga Iniciada (Demostración)
+                </div>
+                <p class="text-xs text-gray-400 mt-1">
+                    Esta es una landing de demostración premium. ¡Gracias por el interés en descargar Maker Cost Calc!
+                </p>
+            `;
+            document.body.appendChild(feedback);
+            setTimeout(() => {
+                feedback.classList.remove('scale-95', 'opacity-0');
+            }, 50);
+
+            setTimeout(() => {
+                feedback.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    feedback.remove();
+                }, 300);
+            }, 5000);
+        }
+
+        // On Load initializers
+        window.onload = function() {
+            // Calculate initial state and load app screen carousels
+            calculateCost();
+            renderScreen(0);
+        }
+    </script>
+</body>
+</html>
